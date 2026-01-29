@@ -1,10 +1,15 @@
 module.exports = {
     content: [
       './index.html',
-      './src/**/*.{ts,tsx,js,jsx}'  // include JS/JSX too
+      './src/**/*.{ts,tsx,js,jsx}' 
     ],
     theme: {
-      extend: {},
+      extend: {
+        colors: {
+          customBlue: "#4a90e2",
+          customGray: "#d9e2ec"
+        }
+      },
     },
     plugins: [],
   };

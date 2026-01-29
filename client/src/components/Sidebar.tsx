@@ -1,12 +1,23 @@
 import { useState } from "react";
-import { BOTS } from "../data";
-import type { Bot } from "../types";
+import type { Contact } from "../types";
 
-export default function Sidebar({ activeBotId, onSelectBot }: any) {
+type SidebarProps = {
+  contacts: any[];
+  activeContactId: string;
+  onSelectContact: (id: string) => void;
+  unreadCounts: Record<string, number>
+}
+
+export default function Sidebar({
+  activeContactId, 
+  contacts, 
+  onSelectContact, 
+  unreadCounts 
+  }: SidebarProps) {
   const [filter, setFilter] = useState('online');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredBots = BOTS.filter((bot: Bot) => {
+  const displayContacts = contacts.filter((bot: Contact) => {
     const matchesTab = filter === 'all' || bot.online;
     const matchesSearch = bot.name.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesTab && matchesSearch;
@@ -30,22 +41,34 @@ export default function Sidebar({ activeBotId, onSelectBot }: any) {
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        { filteredBots.length ? filteredBots.map((bot: Bot) => (
-          <div 
-            key={bot.id}
-            onClick={() => onSelectBot(bot.id)} // This switches the chat
-            className={`p-4 flex gap-3 border-b border-gray-100 cursor-pointer ${activeBotId === bot.id ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
-          >
-            <div className="relative">
-              <div className="w-12 h-12 bg-black rounded" />
-              {bot.online && <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full" />}
+        { displayContacts.length ? displayContacts.map((c: Contact) => {
+          const unreadCount = unreadCounts[c.id] || 0;
+
+          return (
+            <div 
+              key={c.id}
+              onClick={() => onSelectContact(c.id)} 
+              className={`p-4 flex gap-3 border-b border-gray-100 cursor-pointer ${activeContactId === c.id ? 'bg-gray-100' : 'hover:bg-gray-50'}`}
+            >
+              <div className="relative">
+                <div className="w-12 h-12 bg-black rounded" />
+                {c.online && <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full" />}
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="font-bold text-sm truncate">{c.name}</h4>
+                <p className="text-xs text-gray-400 truncate">{c.desc}</p>
+              </div>
+
+              {unreadCount > 0 && (
+                <div className="flex items-center">
+                  <span className="w-4 h-4 aspect-square bg-[#4a90e2] text-white text-[10px] font-bold flex items-center justify-center rounded-full">
+                    {unreadCount}
+                  </span>
+                </div>
+              )}
             </div>
-            <div className="flex-1 min-w-0">
-              <h4 className="font-bold text-sm truncate">{bot.name}</h4>
-              <p className="text-xs text-gray-400 truncate">{bot.desc}</p>
-            </div>
-          </div>
-        )) : 
+          )
+        }) : 
         <div className="text-sm text-center text-gray-400 pt-8">No conversations found</div>
     }
       </div>
