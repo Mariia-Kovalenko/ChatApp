@@ -37,13 +37,22 @@ export default function App() {
 
   const handleSelectContact = (id: string) => {
       setActiveContactId(id);
+      localStorage.setItem('lastOpened', id);
       setShowChat(true);
       setUnreadCounts((prev) => ({ ...prev, [id]: 0 }));
   };
 
   useEffect(() => {
     if (!activeContact && contacts.length) {
-      setActiveContactId(contacts[0].id)
+      // FIX: make sure we always see the last opened 
+      const lastOpened = localStorage.getItem('lastOpened');
+      const c = contacts.find((c) => c.id === lastOpened);
+
+      if (c?.online) {
+        setActiveContactId(c?.id)
+      } else {
+        setActiveContactId(contacts[0].id)
+      }
       setShowChat(true);
     }
   }, [contacts])
