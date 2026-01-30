@@ -1,3 +1,5 @@
+import { USERS_NAMES } from '../constants';
+
 interface UserProfile {
     id: string;
     name: string;
@@ -8,7 +10,7 @@ export const getIdentity = () => {
     const saved = localStorage.getItem('chat_user');
     if (saved) return JSON.parse(saved);
 
-    const names = ["Swift Fox", "Neon Turtle", "Brave Panda", "Shadow Eagle", "Cosmic Whale"];
+    const names = USERS_NAMES;
     const randomName = names[Math.floor(Math.random() * names.length)] + " " + Math.floor(Math.random() * 100);
     const randomAvatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${randomName}`;
 

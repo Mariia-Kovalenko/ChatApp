@@ -1,0 +1,1 @@
+export const USERS_NAMES = ["Swift Fox", "Neon Turtle", "Brave Panda", "Shadow Eagle", "Cosmic Whale"]
