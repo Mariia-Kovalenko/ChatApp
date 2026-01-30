@@ -1,5 +1,6 @@
 const { getAllUsers } = require("../state/users");
 const { spamMessages } = require("../constants");
+const { saveMessage } = require ("../state/messages");
 
 const startSpamBot = (io) => {
     const sendSpam = () => {
@@ -24,6 +25,9 @@ const startSpamBot = (io) => {
                         text: randomText,
                         time: timestamp,
                     };
+
+                    //FIX: save spam bot messages
+                    saveMessage(spamMsg);
 
                     io.to(user.socketId).emit("receive_message", spamMsg);
                 }

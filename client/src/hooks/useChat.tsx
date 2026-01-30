@@ -4,6 +4,7 @@ import {
   connectSocket,
   disconnectSocket,
   onReceiveMessage,
+  onReceiveHistory,
   onTyping,
   onUserList,
   sendMessage,
@@ -33,6 +34,11 @@ export function useChat(currentUser: { id: string }) {
 
     onUserList((list) => {
       setContacts(list.filter(u => u.id !== currentUser.id));
+    });
+
+    // FIX: add listener to receive message history
+    onReceiveHistory((history: Message[]) => {
+      setMessages(history);
     });
 
     onReceiveMessage((msg) => {

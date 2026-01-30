@@ -4,17 +4,29 @@ const {
     getAllUsers,
     getUserById,
 } = require("../state/users");
+const { saveMessage, getAllMessages } = require('../state/messages');
 const { bots } = require("../constants");
 
 const registerSocketHandlers = (io, socket) => {
+
     // JOIN
     socket.on('join', (user) => {
         const list = addUser(user, socket.id);
         io.emit('user_list', Object.values(list));
+
+        // FIX: load messages history
+        const allMessages = getAllMessages(); 
+        const userHistory = allMessages.filter(m => 
+            m.toUserId === user.id || m.fromUserId === user.id
+        );
+        socket.emit('load_history', userHistory);
+
+        console.log('emit user history', userHistory)
     });
 
     // SEND MESSAGE
     socket.on("send_message", (msg) => {
+        saveMessage(msg);
         const targetId = msg.toUserId;
         // FIX: add separate func to handle bot and user messages
         if (bots[targetId]) {
@@ -60,13 +72,16 @@ function handleBotResponse(socket, targetId, msg) {
                   ? msg.text.split("").reverse().join("")
                   : "";
         if (text) {
-            socket.emit("receive_message", {
+            // fix: fixed saving bot message to history
+            const botResponse = {
                 ...msg,
                 fromUserId: targetId,
                 toUserId: msg.fromUserId,
                 text,
                 id: Date.now(),
-            });
+            }
+            saveMessage(botResponse);
+            socket.emit("receive_message", botResponse);
         }
         if (targetId !== "ignore") {
             socket.emit("user_typing", {
