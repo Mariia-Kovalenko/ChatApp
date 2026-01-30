@@ -17,3 +17,19 @@ body {
 * {
   transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
 }
+
+
+.scrollable::-webkit-scrollbar {
+  width: 10px;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+  background-color: #86919cd6;
+  border-radius: 100px;
+}
+
+.scrollable::-webkit-scrollbar-track-piece {
+  margin-top: 30px;
+  border-radius: 100px;
+  background: #b4c3d2;
+}

@@ -69,7 +69,7 @@ export default function ChatWindow({
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-[#d9e2ec]">
+      <div className="scrollable flex-1 overflow-y-auto p-6 space-y-4 bg-[#d9e2ec]">
         {messages.map((msg) => {
             console.log(msg.fromUserId, ' vs ', currentUserId)
             const isMe = msg.fromUserId === currentUserId;
@@ -92,7 +92,7 @@ export default function ChatWindow({
       </div>
 
       {isTyping && 
-        <div className="text-center text-xs text-blue italic py-2 bg-[#d9e2ec]">
+        <div className="text-center text-[#4a90e2] text-xs text-blue italic py-2 bg-[#d9e2ec]">
             {activeContact.name} is typing
         </div>
     }
